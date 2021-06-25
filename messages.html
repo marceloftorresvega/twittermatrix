@@ -26,9 +26,6 @@
 
 <body>
 	<canvas id="c"></canvas>
-	<audio id="a" loop="loop" preload="auto">
-		<source src="DramaticEndingShortVersion.mp3" type="audio/mpeg">
-	</audio>
 	<script>
 		onload = function() {
 			// based on
@@ -50,7 +47,6 @@
 			var twitterMessages = []; // data stack (queue)
 			var messages = []; // current printed data
 			
-			var a = document.getElementById("a");
 
 			var c = document.getElementById("c");
 			var ctx = c.getContext("2d");
@@ -106,27 +102,8 @@
 				}
 			}
 			
-			function toggleAudio()
-			{
-				if (a.paused)
-				{
-					a.play();
-				}
-				else
-				{
-					a.pause();
-				}
-			}
-			
 			onmousemove = updateColumnState;
 			onclick = onClick;
-			onkeyup = function(e) 
-			{
-				if (e.keyCode == 32)
-				{
-					toggleAudio();
-				}
-			}
 
 			//drawing the characters
 			function draw() 
@@ -229,7 +206,7 @@
 			}
 			
 			// Take language from url hash parameter
-			language = window.location.hash.substr(1).toLowerCase();
+			//language = window.location.hash.substr(1).toLowerCase();
 
 			function addTwitterMessage(msg) {
 				var messageUrl = "https://twitter.com/" + msg.user.screen_name + "/status/" + msg.id_str;
@@ -245,8 +222,16 @@
 					// skip if there are too many messages (events)
 					if (twitterMessages.length < maxMessages)
 					{
-						if (!language || msg.lang == language)
+						//if (!language || msg.lang == language &&
+						if ( msg.place &&
+						msg.place.country_code == 'CL')
 						{
+							//console.log(msg.place.country_code);
+							//console.log(msg.place.country);
+							console.log(msg.place.full_name);
+							console.log(msg.place.bounding_box.coordinates[0][0]);
+							console.log(msg.entities);
+							console.log(msg.geo);
 							addTwitterMessage(msg);
 						}
 					}
